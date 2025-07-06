@@ -961,6 +961,37 @@ const centerDotPlugin = {
     }
   }
 };
+document.addEventListener('DOMContentLoaded', function () {
+    const autoGenerateBtn = document.getElementById('auto-generate-btn');
+    if (autoGenerateBtn) {
+        autoGenerateBtn.addEventListener('click', async () => {
+            try {
+                const userData = loadUserData();
+                const response = await fetch("https://n8n-fg-rl.up.railway.app/webhook/gen_quest", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ user: userData })
+                });
+                const quest = await response.json();
+
+                document.getElementById('quest-name').value = quest.name;
+                document.getElementById('quest-type').value = quest.type;
+                document.getElementById('quest-description').value = quest.description;
+                document.getElementById('quest-grade').value = quest.grade;
+                document.getElementById('quest-xp').value = quest.xpReward;
+                document.getElementById('quest-stat-name').value = quest.statReward.name;
+                document.getElementById('quest-stat-count').value = quest.statReward.count;
+                document.getElementById('quest-deadline-value').value = quest.deadlineValue;
+                document.getElementById('quest-deadline-unit').value = quest.deadlineUnit;
+
+                showNotification("🎉 Quest generated successfully!");
+            } catch (err) {
+                console.error(err);
+                showNotification("⚠️ Failed to generate quest. Try again.");
+            }
+        });
+    }
+});
 
 // Ensure this part of the code is called appropriately to create the radar chart
 document.addEventListener('DOMContentLoaded', function() {
